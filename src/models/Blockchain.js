@@ -36,9 +36,14 @@ class Blockchain {
 addTransaction(transaction) {
   const currentOwner = this.getCurrentOwner(transaction.serialNumber);
 
-  if (currentOwner && currentOwner !== transaction.fromAddress) {
-    throw new Error("Transaction rejected: sender is not the current owner");
-  }
+if (currentOwner && currentOwner !== transaction.fromAddress) {
+  const error = new Error(
+    "Transaction rejected: sender is not the current owner"
+  );
+
+  error.statusCode = 422;
+  throw error;
+}
 
   this.pendingTransactions.push(transaction);
 }
