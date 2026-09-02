@@ -39,4 +39,26 @@ describe("Blockchain", () => {
     expect(blockchain.pendingTransactions).toHaveLength(0);
     expect(minedBlock.hash.startsWith("0")).toBe(true);
   });
+  it("should reject a transfer from someone who is not the current owner", () => {
+  const blockchain = new Blockchain();
+
+  blockchain.addTransaction({
+    serialNumber: "BAG-2026-001",
+    fromAddress: "0xManufacturer",
+    toAddress: "0xCollectorA",
+    timestamp: Date.now()
+  });
+
+  blockchain.minePendingTransactions();
+
+  const invalidTransfer = {
+    serialNumber: "BAG-2026-001",
+    fromAddress: "0xCollectorB",
+    toAddress: "0xCollectorC",
+    timestamp: Date.now()
+  };
+
+  expect(() => blockchain.addTransaction(invalidTransfer)).toThrow();
+});
+
 });

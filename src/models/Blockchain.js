@@ -19,10 +19,29 @@ class Blockchain {
   getLatestBlock() {
     return this.chain[this.chain.length - 1];
   }
+  getCurrentOwner(serialNumber) {
+  let currentOwner = null;
 
-  addTransaction(transaction) {
-    this.pendingTransactions.push(transaction);
+  for (const block of this.chain) {
+    for (const transaction of block.data) {
+      if (transaction.serialNumber === serialNumber) {
+        currentOwner = transaction.toAddress;
+      }
+    }
   }
+
+  return currentOwner;
+}
+
+addTransaction(transaction) {
+  const currentOwner = this.getCurrentOwner(transaction.serialNumber);
+
+  if (currentOwner && currentOwner !== transaction.fromAddress) {
+    throw new Error("Transaction rejected: sender is not the current owner");
+  }
+
+  this.pendingTransactions.push(transaction);
+}
 
   minePendingTransactions() {
     const newBlock = new Block(
