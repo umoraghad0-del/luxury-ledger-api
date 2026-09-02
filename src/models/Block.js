@@ -7,7 +7,7 @@ class Block {
             this.data= data;
             this.previousHash=previousHash;
             this.nonce=0;
-            this.hash= "";
+            this.hash= this.calculateHash();
 
     }
     calculateHash(){
