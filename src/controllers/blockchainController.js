@@ -31,5 +31,24 @@ export function mineBlock(req, res, next) {
     next(error);
   }
 }
+export function verifyProduct(req, res) {
+  const { serialNumber } = req.params;
+
+  const currentOwner = blockchain.getCurrentOwner(serialNumber);
+
+  if (!currentOwner) {
+    return res.status(404).json({
+      error: "Product not found"
+    });
+  }
+
+  const isValid = blockchain.isChainValid();
+
+  res.status(200).json({
+    serialNumber,
+    currentOwner,
+    blockchainValid: isValid
+  });
+}
 
 export { blockchain };
