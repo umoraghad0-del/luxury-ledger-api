@@ -26,4 +26,21 @@ describe("Block", () => {
 
   expect(block.hash.startsWith("00")).toBe(true);
 });
+
+it("should generate the same hash for data with different key order", () => {
+  const blockA = new Block(
+    1, 123456,
+    {
+    serialNumber: "BAG-001", owner: "0xCollectorA" 
+    },
+    "previous-hash"
+  );
+
+  const blockB = new Block(
+    1, 123456, {
+      owner: "0xCollectorA", serialNumber: "BAG-001"},
+      "previous-hash");
+
+  expect(blockA.calculateHash()).toBe(blockB.calculateHash());
+});
 });
